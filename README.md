@@ -494,3 +494,208 @@ src/main/java/impl/project2/ConstExprVisitor.java:8: 错误: 方法不会覆盖�
     @Override
     ^
 68 个错误
+
+
+
+
+
+很好，这一大坨报错其实都在说一件事：
+
+> **你还没有生成 ANTLR 的解析器代码，所以 `generated.Splc` 这个包根本不存在。**
+
+所以不是你 `Compiler.java` 写坏了，而是 **少了一步“先用 ANTLR 生成 Java 源码，再用 javac 编译”**。
+
+我一步步帮你把坑填上。
+
+---
+
+## 1️⃣ 先理解错误的根本原因
+
+报错里一堆这样的东西：
+
+```text
+错误: 程序包generated.Splc不存在
+import generated.Splc.SplcBaseVisitor;
+...
+错误: 找不到符号  类 SplcLexer / SplcParser / ProgramContext / ...
+```
+
+意思就是：
+
+* 代码里写了 `import generated.Splc.*;`
+* 但是 `src/main/java/generated/Splc/` 下面 **没有** `SplcLexer.java、SplcParser.java、SplcBaseVisitor.java` 这些文件
+* 它们本来应该是 **由 ANTLR 根据你的 `Splc.g4` 自动生成的**
+
+在你新的虚拟机环境里，还没执行“生成 parser”的那一步，所以现在看起来就像：
+
+> “我要编译一个引用 `generated.Splc.*` 的工程，但这个包根本不存在。”
+
+---
+
+## 2️⃣ 第一步：检查一下目录里有没有生成代码
+
+在项目根目录执行：
+
+```bash
+ls src/main/java/generated
+```
+
+如果显示 `No such file or directory` 或者里面没有 `Splc` 目录，那就说明确实还没生成。
+
+再试：
+
+```bash
+ls src/main/java/generated/Splc
+```
+
+如果也没有东西，100% 说明：**ANTLR 还没跑过或用了旧路径**。
+
+---
+
+## 3️⃣ 第二步：用 ANTLR 生成 Splc 的 Java 源码
+
+在项目根目录（就是有 `Splc.g4`、`libs/`、`src/` 的那个目录）执行：
+
+```bash
+mkdir -p src/main/java/generated/Splc
+
+java -jar libs/antlr-4.13.2-complete.jar \
+  -Dlanguage=Java \
+  -visitor \
+  -package generated.Splc \
+  -o src/main/java/generated/Splc \
+  Splc.g4
+```
+
+解释一下每一项：
+
+* `java -jar libs/antlr-4.13.2-complete.jar`
+  调用 ANTLR 工具，jar 文件老师已经放在 `libs/` 里了
+* `-Dlanguage=Java`
+  生成 Java 代码
+* `-visitor`
+  生成 `SplcBaseVisitor`，你的 `Compiler` 和 Project2 的代码都要用它
+* `-package generated.Splc`
+  生成的类的包名就是 `generated.Splc`，跟代码里的 import 对上
+* `-o src/main/java/generated/Splc`
+  输出目录，也就是 VSCode/编译时会看到的包路径
+* `Splc.g4`
+  你的语法文件（已经换成我们刚写好的完整版本）
+
+执行完之后，你可以再看一下：
+
+```bash
+ls src/main/java/generated/Splc
+```
+
+应该能看到一堆文件，比如：
+
+* `SplcLexer.java`
+* `SplcParser.java`
+* `SplcBaseVisitor.java`
+* `SplcVisitor.java`
+* 以及一些内部类相关文件
+
+这一步成功之后，“generated.Splc 不存在”的问题就解决了 ✅
+
+> ⚠️ 以后如果你再改 `Splc.g4`，也要重新跑一遍这个命令生成新的 Java 文件。
+
+---
+
+## 4️⃣ 第三步：重新编译所有 Java 文件
+
+现在再执行你之前的编译命令：
+
+```bash
+mkdir -p out
+
+javac -cp libs/antlr-4.13.2-complete.jar \
+      -d out \
+      $(find src/main/java -name "*.java")
+```
+
+这次如果 `generated.Splc` 里有东西，前面那一长串“找不到 SplcParser/SplcLexer/SplcBaseVisitor”的错误应该都会消失。
+
+如果还有报错，多半就是我们 `Compiler.java` 里的小语法问题了，那时我们再具体看。
+
+---
+
+## 5️⃣ 第四步：运行程序测试
+
+编译成功后，运行：
+
+```bash
+java -cp "out:libs/antlr-4.13.2-complete.jar" Main
+```
+
+如果 `Main` 还指向 `testcases/project3/ok_01.splc`，你应该看到类似：
+
+```text
+Variables:
+...
+
+Functions:
+...
+```
+
+或者，如果你改成某个 error 用例，应该会看到 Project3 的语义错误输出。
+
+---
+
+## 6️⃣ 补充：有 Makefile 的话，也可以偷懒
+
+有些课程项目的 `Makefile` 已经帮你写好“生成 parser + 编译 + 运行”的命令了，比如：
+
+```bash
+make parser     # 生成 SplcLexer/SplcParser 等
+make project3   # 或 make all / make
+```
+
+如果你想用 Makefile，可以：
+
+```bash
+cat Makefile
+```
+
+看里面有没有类似：
+
+```make
+parser:
+    java -jar libs/antlr-4.13.2-complete.jar ...
+```
+
+有的话直接 `make parser` 也行，本质上做的是和上面第 3 步一样的事情。
+
+---
+
+## ✅ 小结（一句话版）
+
+* **现在所有错误的根本原因**：没有生成 ANTLR 的 Java 源码 → `generated.Splc` 包不存在
+* **解决步骤**：
+
+  1. 在项目根目录执行 ANTLR 命令：
+
+     ```bash
+     mkdir -p src/main/java/generated/Splc
+     java -jar libs/antlr-4.13.2-complete.jar \
+       -Dlanguage=Java \
+       -visitor \
+       -package generated.Splc \
+       -o src/main/java/generated/Splc \
+       Splc.g4
+     ```
+
+  2. 再执行：
+
+     ```bash
+     javac -cp libs/antlr-4.13.2-complete.jar -d out $(find src/main/java -name "*.java")
+     ```
+
+  3. 然后：
+
+     ```bash
+     java -cp "out:libs/antlr-4.13.2-complete.jar" Main
+     ```
+
+你可以先跑完上面三步，如果中间还有新的报错，把错误贴出来，我帮你继续逐条排。
+
