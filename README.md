@@ -130,3 +130,145 @@ java -cp libs/antlr-4.13.2-complete.jar:out Main testcases/project3/err_01.splc
 * 把 `javac` 或 `java` 命令的报错贴上来
 * 或者告诉我 VS Code 现在还剩下哪些红线（类名我能一眼看出是哪个环节的问题），
   我可以继续帮你做“错误清理”。
+
+
+很好，你现在遇到的是两个“层次”不同的问题：
+
+* **编译器层面**：`javac` 能不能找到 `org.antlr.v4.runtime.tree.TerminalNode`
+* **VS Code 提示层面**：Java 扩展知不知道这个 jar
+
+目前 VS Code 在 `Project3SemanticError.java` 上报：
+
+```java
+import org.antlr.v4.runtime.tree.TerminalNode;
+// The import org.antlr... cannot be resolved
+public static Project3SemanticError undeclaredUse(TerminalNode identifier);
+// TerminalNode cannot be resolved to a type
+```
+
+这几乎可以肯定是：**VS Code 的 Java 扩展还不知道 antlr 的 jar 在哪**，而不是你代码写错了。
+
+我分两步帮你解决：先确认编译是否真的 OK，再把 VS Code 的红线清掉。
+
+---
+
+## ① 先确认“真实的编译”是不是 OK（最重要）
+
+先别管 VS Code 红线，在 **项目根目录**（能看到 `libs/`, `src/`, `Splc.g4` 的那一层）打开终端，执行：
+
+```bash
+mkdir -p out
+
+javac -cp libs/antlr-4.13.2-complete.jar:src/main/java \
+  -d out \
+  $(find src/main/java -name "*.java") Main.java
+```
+
+* 如果这一条 **成功执行，没有任何报错**
+  ➜ 说明 `org.antlr.v4.runtime.tree.TerminalNode` 在编译时是能被找到的，
+  VS Code 的红线只是“编辑器不开心”，但不会影响真实编译和运行。
+
+* 如果这一条 **报错类似：package org.antlr.v4.runtime.tree does not exist**
+  ➜ 那说明 classpath 还没配对，我们再调整命令（但你之前能跑 ANTLR，那一般 Java 是正常的）。
+
+先按上面这条跑一次，如果成功了，接着做第 ② 步来“安抚” VS Code。
+
+---
+
+## ② 告诉 VS Code：`libs` 里的 jar 是 Java 依赖
+
+### 2.1 在 `.vscode/settings.json` 声明 jar
+
+在项目根目录：
+
+```bash
+mkdir -p .vscode
+```
+
+然后在 `.vscode/settings.json` 写入（或追加）：
+
+```json
+{
+  "java.project.referencedLibraries": [
+    "libs/**/*.jar"
+  ]
+}
+```
+
+注意几点：
+
+* 路径是 **相对于你在 VS Code 里打开的那个文件夹** 的
+  所以你必须是 **直接把项目根目录打开成 workspace**，而不是它的上级目录。
+* `libs/**/*.jar` 会把 `libs` 下面所有 jar 都加进依赖里，包括 `antlr-4.13.2-complete.jar`
+
+保存文件后：
+
+1. 在 VS Code 命令面板中（Ctrl+Shift+P）执行：
+   **Java: Clean Java Language Server Workspace**
+2. VS Code 会提示重启窗口，点“Restart” / “Reload Window”。
+
+重启后 Java 扩展会重新扫描 project + referencedLibraries，
+`org.antlr.v4.runtime.tree.TerminalNode` 那行多半就不红了。
+
+---
+
+## ③ 再看 Project3SemanticError.java 的情况
+
+`Project3SemanticError.java` 里类似这样的代码：
+
+```java
+import org.antlr.v4.runtime.tree.TerminalNode;
+
+public static Project3SemanticError undeclaredUse(TerminalNode identifier) { ... }
+```
+
+这个类本身就是老师给框架用来报语义错误的工具类：
+
+* 它**必须**依赖 ANTLR 的 runtime（`org.antlr.v4.runtime.*`）
+* 只要：
+
+  * antlr 的 jar 在 `libs/`
+  * VS Code 的 `java.project.referencedLibraries` 已经指向 `libs/**/*.jar`
+
+  ➜ 红线就会消失。
+
+你不用改 `Project3SemanticError.java` 的任何内容，它写得是对的。
+
+---
+
+## ④ 小结一下你现在要做的两件事
+
+1. **验证编译是否没问题**（真实标准）：
+
+   ```bash
+   javac -cp libs/antlr-4.13.2-complete.jar:src/main/java -d out \
+     $(find src/main/java -name "*.java") Main.java
+   ```
+
+   ➜ 成功说明 TerminalNode 其实已经正常被编译引用。
+
+2. **让 VS Code 别再乱标红**：
+
+   * 在 `.vscode/settings.json` 中加：
+
+     ```json
+     {
+       "java.project.referencedLibraries": [
+         "libs/**/*.jar"
+       ]
+     }
+     ```
+
+   * 然后用 `Java: Clean Java Language Server Workspace` 清缓存并重启窗口。
+
+---
+
+如果你愿意，下一步你可以把：
+
+* `javac` 命令的输出
+* 或 `.vscode/settings.json` 的内容
+
+贴一小段出来，我可以帮你确认：
+
+* 是否已经“真正编译通过”
+* VS Code 还剩下的红线是不是可以直接无视，还是还有路径问题要调。
