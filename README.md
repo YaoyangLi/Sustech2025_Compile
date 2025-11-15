@@ -699,3 +699,80 @@ parser:
 
 你可以先跑完上面三步，如果中间还有新的报错，把错误贴出来，我帮你继续逐条排。
 
+
+
+cs323@deb-cs323-compilers:~/Desktop/Project3/Sustech2025_Compile-project3/CS323-Compilers-2025F-Projects-project3-base$ 
+javac -cp libs/antlr-4.13.2-complete.jar \
+      -d out \
+      $(find src/main/java -name "*.java")
+src/main/java/impl/Compiler.java:300: 错误: 找不到符号
+            if (specCtx.INT() != null) {
+                       ^
+  符号:   方法 INT()
+  位置: 类型为SpecifierContext的变量 specCtx
+src/main/java/impl/Compiler.java:303: 错误: 找不到符号
+            if (specCtx.CHAR() != null) {
+                       ^
+  符号:   方法 CHAR()
+  位置: 类型为SpecifierContext的变量 specCtx
+src/main/java/impl/Compiler.java:314: 错误: 找不到符号
+            if (varDecCtx.Identifier() != null) {
+                         ^
+  符号:   方法 Identifier()
+  位置: 类型为VarDecContext的变量 varDecCtx
+src/main/java/impl/Compiler.java:315: 错误: 找不到符号
+                identHolder[0] = varDecCtx.Identifier();
+                                          ^
+  符号:   方法 Identifier()
+  位置: 类型为VarDecContext的变量 varDecCtx
+src/main/java/impl/Compiler.java:320: 错误: 找不到符号
+            if (varDecCtx.varDec() != null && varDecCtx.Number() != null) {
+                         ^
+  符号:   方法 varDec()
+  位置: 类型为VarDecContext的变量 varDecCtx
+src/main/java/impl/Compiler.java:320: 错误: 找不到符号
+            if (varDecCtx.varDec() != null && varDecCtx.Number() != null) {
+                                                       ^
+  符号:   方法 Number()
+  位置: 类型为VarDecContext的变量 varDecCtx
+src/main/java/impl/Compiler.java:321: 错误: 找不到符号
+                Type elementType = buildDeclaratorType(baseType, varDecCtx.varDec(), identHolder);
+                                                                          ^
+  符号:   方法 varDec()
+  位置: 类型为VarDecContext的变量 varDecCtx
+src/main/java/impl/Compiler.java:324: 错误: 找不到符号
+                    size = Integer.parseInt(varDecCtx.Number().getText());
+                                                     ^
+  符号:   方法 Number()
+  位置: 类型为VarDecContext的变量 varDecCtx
+src/main/java/impl/Compiler.java:339: 错误: 找不到符号
+            if (varDecCtx.varDec() != null && varDecCtx.STAR() != null) {
+                         ^
+  符号:   方法 varDec()
+  位置: 类型为VarDecContext的变量 varDecCtx
+src/main/java/impl/Compiler.java:339: 错误: 找不到符号
+            if (varDecCtx.varDec() != null && varDecCtx.STAR() != null) {
+                                                       ^
+  符号:   方法 STAR()
+  位置: 类型为VarDecContext的变量 varDecCtx
+src/main/java/impl/Compiler.java:340: 错误: 找不到符号
+                return buildDeclaratorType(baseType, varDecCtx.varDec(), identHolder);
+                                                              ^
+  符号:   方法 varDec()
+  位置: 类型为VarDecContext的变量 varDecCtx
+src/main/java/impl/Compiler.java:344: 错误: 找不到符号
+            if (varDecCtx.varDec() != null && varDecCtx.LPAREN() != null) {
+                         ^
+  符号:   方法 varDec()
+  位置: 类型为VarDecContext的变量 varDecCtx
+src/main/java/impl/Compiler.java:344: 错误: 找不到符号
+            if (varDecCtx.varDec() != null && varDecCtx.LPAREN() != null) {
+                                                       ^
+  符号:   方法 LPAREN()
+  位置: 类型为VarDecContext的变量 varDecCtx
+src/main/java/impl/Compiler.java:345: 错误: 找不到符号
+                return buildDeclaratorType(baseType, varDecCtx.varDec(), identHolder);
+                                                              ^
+  符号:   方法 varDec()
+  位置: 类型为VarDecContext的变量 varDecCtx
+14 个错误
