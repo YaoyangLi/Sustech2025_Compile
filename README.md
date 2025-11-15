@@ -219,3 +219,278 @@ java -cp "out:libs/antlr-4.13.2-complete.jar" Main testcases/project3/error_03.s
 
 * 这个输出是不是和 80 分设计的行为一致
 * 出现的错误是你代码逻辑的问题，还是测试用例本身暴露出的语义点你还没实现。
+
+
+cs323@deb-cs323-compilers:~/Desktop/Project3/Sustech2025_Compile-project3/CS323-Compilers-2025F-Projects-project3-base$ javac -cp libs/antlr-4.13.2-complete.jar \
+      -d out \
+      $(find src/main/java -name "*.java")
+src/main/java/framework/project2/Grader.java:11: 错误: 程序包generated.Splc不存在
+import generated.Splc.SplcBaseVisitor;
+                     ^
+src/main/java/framework/project2/Grader.java:12: 错误: 程序包generated.Splc不存在
+import generated.Splc.SplcLexer;
+                     ^
+src/main/java/framework/project2/Grader.java:13: 错误: 程序包generated.Splc不存在
+import generated.Splc.SplcParser;
+                     ^
+src/main/java/impl/Compiler.java:7: 错误: 程序包generated.Splc不存在
+import generated.Splc.SplcBaseVisitor;
+                     ^
+src/main/java/impl/Compiler.java:8: 错误: 程序包generated.Splc不存在
+import generated.Splc.SplcLexer;
+                     ^
+src/main/java/impl/Compiler.java:9: 错误: 程序包generated.Splc不存在
+import generated.Splc.SplcParser;
+                     ^
+src/main/java/impl/Compiler.java:10: 错误: 程序包generated.Splc.SplcParser不存在
+import generated.Splc.SplcParser.ProgramContext;
+                                ^
+src/main/java/impl/Compiler.java:11: 错误: 程序包generated.Splc.SplcParser不存在
+import generated.Splc.SplcParser.GlobalDefContext;
+                                ^
+src/main/java/impl/Compiler.java:12: 错误: 程序包generated.Splc.SplcParser不存在
+import generated.Splc.SplcParser.FuncDefContext;
+                                ^
+src/main/java/impl/Compiler.java:13: 错误: 程序包generated.Splc.SplcParser不存在
+import generated.Splc.SplcParser.FuncDeclContext;
+                                ^
+src/main/java/impl/Compiler.java:14: 错误: 程序包generated.Splc.SplcParser不存在
+import generated.Splc.SplcParser.GlobalVarDefContext;
+                                ^
+src/main/java/impl/Compiler.java:15: 错误: 程序包generated.Splc.SplcParser不存在
+import generated.Splc.SplcParser.GlobalStructDeclContext;
+                                ^
+src/main/java/impl/Compiler.java:16: 错误: 程序包generated.Splc.SplcParser不存在
+import generated.Splc.SplcParser.SpecifierContext;
+                                ^
+src/main/java/impl/Compiler.java:17: 错误: 程序包generated.Splc.SplcParser不存在
+import generated.Splc.SplcParser.VarDecContext;
+                                ^
+src/main/java/impl/Compiler.java:18: 错误: 程序包generated.Splc.SplcParser不存在
+import generated.Splc.SplcParser.FuncArgsContext;
+                                ^
+src/main/java/impl/Compiler.java:19: 错误: 程序包generated.Splc.SplcParser不存在
+import generated.Splc.SplcParser.StatementContext;
+                                ^
+src/main/java/impl/Compiler.java:20: 错误: 程序包generated.Splc.SplcParser不存在
+import generated.Splc.SplcParser.BlockStmtContext;
+                                ^
+src/main/java/impl/Compiler.java:21: 错误: 程序包generated.Splc.SplcParser不存在
+import generated.Splc.SplcParser.VarDecStmtContext;
+                                ^
+src/main/java/impl/Compiler.java:22: 错误: 程序包generated.Splc.SplcParser不存在
+import generated.Splc.SplcParser.ExpressionContext;
+                                ^
+src/main/java/impl/Compiler.java:186: 错误: 找不到符号
+    private class SemanticAnalyzer extends SplcBaseVisitor<Void> {
+                                           ^
+  符号:   类 SplcBaseVisitor
+  位置: 类 Compiler
+src/main/java/impl/Compiler.java:299: 错误: 找不到符号
+        private Type getBaseType(SpecifierContext specCtx) {
+                                 ^
+  符号:   类 SpecifierContext
+  位置: 类 Compiler.SemanticAnalyzer
+src/main/java/impl/Compiler.java:312: 错误: 找不到符号
+                                         VarDecContext varDecCtx,
+                                         ^
+  符号:   类 VarDecContext
+  位置: 类 Compiler.SemanticAnalyzer
+src/main/java/impl/Compiler.java:352: 错误: 找不到符号
+        private Type buildType(SpecifierContext specCtx,
+                               ^
+  符号:   类 SpecifierContext
+  位置: 类 Compiler.SemanticAnalyzer
+src/main/java/impl/Compiler.java:353: 错误: 找不到符号
+                               VarDecContext varDecCtx,
+                               ^
+  符号:   类 VarDecContext
+  位置: 类 Compiler.SemanticAnalyzer
+src/main/java/impl/Compiler.java:359: 错误: 找不到符号
+        private List<Type> buildFunctionParamTypes(FuncArgsContext argsCtx) {
+                                                   ^
+  符号:   类 FuncArgsContext
+  位置: 类 Compiler.SemanticAnalyzer
+src/main/java/impl/Compiler.java:377: 错误: 找不到符号
+        public Void visitProgram(ProgramContext ctx) {
+                                 ^
+  符号:   类 ProgramContext
+  位置: 类 Compiler.SemanticAnalyzer
+src/main/java/impl/Compiler.java:385: 错误: 找不到符号
+        public Void visitFuncDef(FuncDefContext ctx) {
+                                 ^
+  符号:   类 FuncDefContext
+  位置: 类 Compiler.SemanticAnalyzer
+src/main/java/impl/Compiler.java:424: 错误: 找不到符号
+        public Void visitFuncDecl(FuncDeclContext ctx) {
+                                  ^
+  符号:   类 FuncDeclContext
+  位置: 类 Compiler.SemanticAnalyzer
+src/main/java/impl/Compiler.java:437: 错误: 找不到符号
+        public Void visitGlobalVarDef(GlobalVarDefContext ctx) {
+                                      ^
+  符号:   类 GlobalVarDefContext
+  位置: 类 Compiler.SemanticAnalyzer
+src/main/java/impl/Compiler.java:448: 错误: 找不到符号
+        public Void visitGlobalStructDecl(GlobalStructDeclContext ctx) {
+                                          ^
+  符号:   类 GlobalStructDeclContext
+  位置: 类 Compiler.SemanticAnalyzer
+src/main/java/impl/Compiler.java:454: 错误: 找不到符号
+        public Void visitBlockStmt(BlockStmtContext ctx) {
+                                   ^
+  符号:   类 BlockStmtContext
+  位置: 类 Compiler.SemanticAnalyzer
+src/main/java/impl/Compiler.java:464: 错误: 找不到符号
+        public Void visitVarDecStmt(VarDecStmtContext ctx) {
+                                    ^
+  符号:   类 VarDecStmtContext
+  位置: 类 Compiler.SemanticAnalyzer
+src/main/java/impl/Compiler.java:480: 错误: 找不到符号
+        public Void visitExpression(ExpressionContext ctx) {
+                                    ^
+  符号:   类 ExpressionContext
+  位置: 类 Compiler.SemanticAnalyzer
+src/main/java/impl/project2/ConstExprVisitor.java:3: 错误: 程序包generated.Splc不存在
+import generated.Splc.SplcBaseVisitor;
+                     ^
+src/main/java/impl/project2/ConstExprVisitor.java:4: 错误: 程序包generated.Splc不存在
+import generated.Splc.SplcParser;
+                     ^
+src/main/java/impl/project2/ConstExprVisitor.java:7: 错误: 找不到符号
+public class ConstExprVisitor extends SplcBaseVisitor<Integer> {
+                                      ^
+  符号: 类 SplcBaseVisitor
+src/main/java/impl/project2/ConstExprVisitor.java:9: 错误: 程序包SplcParser不存在
+    public Integer visitExpression(SplcParser.ExpressionContext ctx) {
+                                             ^
+src/main/java/impl/project2/ConstExprVisitor.java:13: 错误: 程序包SplcParser不存在
+    private Integer evaluate(SplcParser.ExpressionContext ctx) {
+                                       ^
+src/main/java/framework/project2/Grader.java:40: 错误: 找不到符号
+        SplcLexer lexer = new SplcLexer(input);
+        ^
+  符号:   类 SplcLexer
+  位置: 类 Grader
+src/main/java/framework/project2/Grader.java:40: 错误: 找不到符号
+        SplcLexer lexer = new SplcLexer(input);
+                              ^
+  符号:   类 SplcLexer
+  位置: 类 Grader
+src/main/java/framework/project2/Grader.java:42: 错误: 找不到符号
+        SplcParser parser = new SplcParser(tokens);
+        ^
+  符号:   类 SplcParser
+  位置: 类 Grader
+src/main/java/framework/project2/Grader.java:42: 错误: 找不到符号
+        SplcParser parser = new SplcParser(tokens);
+                                ^
+  符号:   类 SplcParser
+  位置: 类 Grader
+src/main/java/framework/project2/Grader.java:67: 错误: 找不到符号
+            new SplcBaseVisitor<Void>() {
+                ^
+  符号:   类 SplcBaseVisitor
+  位置: 类 Grader
+src/main/java/framework/project2/Grader.java:71: 错误: 程序包SplcParser不存在
+                public Void visitVarDecStmt(SplcParser.VarDecStmtContext ctx) {
+                                                      ^
+src/main/java/framework/project2/Grader.java:68: 错误: 方法不会覆盖或实现超类型的方法
+                @Override
+                ^
+src/main/java/framework/project2/Grader.java:72: 错误: 程序包SplcParser不存在
+                    SplcParser.ExpressionContext expression = ctx.expression();
+                              ^
+src/main/java/impl/Compiler.java:46: 错误: 找不到符号
+        SplcLexer lexer = new SplcLexer(input);
+        ^
+  符号:   类 SplcLexer
+  位置: 类 Compiler
+src/main/java/impl/Compiler.java:46: 错误: 找不到符号
+        SplcLexer lexer = new SplcLexer(input);
+                              ^
+  符号:   类 SplcLexer
+  位置: 类 Compiler
+src/main/java/impl/Compiler.java:48: 错误: 找不到符号
+        SplcParser parser = new SplcParser(tokens);
+        ^
+  符号:   类 SplcParser
+  位置: 类 Compiler
+src/main/java/impl/Compiler.java:48: 错误: 找不到符号
+        SplcParser parser = new SplcParser(tokens);
+                                ^
+  符号:   类 SplcParser
+  位置: 类 Compiler
+src/main/java/impl/Compiler.java:50: 错误: 找不到符号
+        ProgramContext program = parser.program();
+        ^
+  符号:   类 ProgramContext
+  位置: 类 Compiler
+src/main/java/impl/Compiler.java:364: 错误: 找不到符号
+            List<SpecifierContext> specs = argsCtx.specifier();
+                 ^
+  符号:   类 SpecifierContext
+  位置: 类 Compiler.SemanticAnalyzer
+src/main/java/impl/Compiler.java:365: 错误: 找不到符号
+            List<VarDecContext> varDecs = argsCtx.varDec();
+                 ^
+  符号:   类 VarDecContext
+  位置: 类 Compiler.SemanticAnalyzer
+src/main/java/impl/Compiler.java:376: 错误: 方法不会覆盖或实现超类型的方法
+        @Override
+        ^
+src/main/java/impl/Compiler.java:378: 错误: 找不到符号
+            for (GlobalDefContext def : ctx.globalDef()) {
+                 ^
+  符号:   类 GlobalDefContext
+  位置: 类 Compiler.SemanticAnalyzer
+src/main/java/impl/Compiler.java:384: 错误: 方法不会覆盖或实现超类型的方法
+        @Override
+        ^
+src/main/java/impl/Compiler.java:399: 错误: 找不到符号
+            FuncArgsContext argsCtx = ctx.funcArgs();
+            ^
+  符号:   类 FuncArgsContext
+  位置: 类 Compiler.SemanticAnalyzer
+src/main/java/impl/Compiler.java:401: 错误: 找不到符号
+                List<SpecifierContext> specs = argsCtx.specifier();
+                     ^
+  符号:   类 SpecifierContext
+  位置: 类 Compiler.SemanticAnalyzer
+src/main/java/impl/Compiler.java:402: 错误: 找不到符号
+                List<VarDecContext> varDecs = argsCtx.varDec();
+                     ^
+  符号:   类 VarDecContext
+  位置: 类 Compiler.SemanticAnalyzer
+src/main/java/impl/Compiler.java:414: 错误: 找不到符号
+            for (StatementContext stmt : ctx.statement()) {
+                 ^
+  符号:   类 StatementContext
+  位置: 类 Compiler.SemanticAnalyzer
+src/main/java/impl/Compiler.java:423: 错误: 方法不会覆盖或实现超类型的方法
+        @Override
+        ^
+src/main/java/impl/Compiler.java:436: 错误: 方法不会覆盖或实现超类型的方法
+        @Override
+        ^
+src/main/java/impl/Compiler.java:447: 错误: 方法不会覆盖或实现超类型的方法
+        @Override
+        ^
+src/main/java/impl/Compiler.java:453: 错误: 方法不会覆盖或实现超类型的方法
+        @Override
+        ^
+src/main/java/impl/Compiler.java:456: 错误: 找不到符号
+            for (StatementContext stmt : ctx.statement()) {
+                 ^
+  符号:   类 StatementContext
+  位置: 类 Compiler.SemanticAnalyzer
+src/main/java/impl/Compiler.java:463: 错误: 方法不会覆盖或实现超类型的方法
+        @Override
+        ^
+src/main/java/impl/Compiler.java:479: 错误: 方法不会覆盖或实现超类型的方法
+        @Override
+        ^
+src/main/java/impl/project2/ConstExprVisitor.java:8: 错误: 方法不会覆盖或实现超类型的方法
+    @Override
+    ^
+68 个错误
