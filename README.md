@@ -184,3 +184,18 @@ main: int(int,int[123])
 * 把这个 jar 加到 VSCode 的 `java.project.referencedLibraries` 里，并确认 Splc 生成在 `src/main/java/generated/Splc`，问题就解决了。
 
 如果你愿意，你可以把你当前 `.vscode/settings.json` 的内容发给我，我帮你检查一下有没有写错路径。
+
+
+
+cs323@deb-cs323-compilers:~/Desktop/Project3/Sustech2025_Compile-project3_v2/CS323-Compilers-2025F-Projects-project3-base$  /usr/bin/env /usr/lib/jvm/java-21-openjdk-amd64/bin/java @/tmp/cp_bplba8bh6jpkv80k8ssa2ysdc.argfile Main 
+Exception in thread "main" java.lang.Error: Unresolved compilation problems: 
+        SplcLexer cannot be resolved to a type
+        SplcLexer cannot be resolved to a type
+        SplcParser cannot be resolved to a type
+        SplcParser cannot be resolved to a type
+        ProgramContext cannot be resolved to a type
+
+        at impl.Compiler.start(Compiler.java:34)
+        at framework.project3.Grader.run(Grader.java:21)
+        at Main.main(Main.java:13)
+
