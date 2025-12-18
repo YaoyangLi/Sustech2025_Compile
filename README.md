@@ -233,3 +233,148 @@ ID=debian
 HOME_URL="https://www.debian.org/"
 SUPPORT_URL="https://www.debian.org/support"
 BUG_REPORT_URL="https://bugs.debian.org/"
+
+
+
+
+你这台是 **Debian 13 (trixie)**。在 Debian 13 里，系统默认的 JDK 往往是 **OpenJDK 21**（而且很多情况下仓库里**不再提供** `openjdk-17-jdk` 这个包名，或者你当前启用的软件源没有包含它），所以你才会看到“无法定位 openjdk-17-jdk”。
+
+下面给你**最稳的解决办法**（按顺序做，复制粘贴即可）。
+
+---
+
+## 方案 1（推荐）：直接装 Debian 13 默认 JDK（default-jdk / OpenJDK 21）
+
+```bash
+sudo apt update
+sudo apt install -y default-jdk
+```
+
+装完检查：
+
+```bash
+java -version
+javac -version
+```
+
+通常会显示 21.x（没问题，Java 21 兼容性比 17 更强，一般不会影响你这个项目）。
+
+如果你想明确装 OpenJDK 21：
+
+```bash
+sudo apt install -y openjdk-21-jdk
+```
+
+---
+
+## 方案 2：先看看你仓库里到底有哪些 OpenJDK 版本可装
+
+```bash
+apt-cache search '^openjdk-[0-9]+-jdk$'
+```
+
+你会看到类似：
+
+* `openjdk-21-jdk`
+* （可能还有）`openjdk-17-jdk`
+
+如果列表里确实没有 `openjdk-17-jdk`，那就说明 Debian 13 的当前源里不提供 17 ——直接用方案 1 装 `default-jdk`/21 就行。
+
+---
+
+## 装好 JDK 之后：继续按“编译 + 检查”流程跑（Debian VM 上）
+
+### 1）装其余依赖
+
+```bash
+sudo apt update
+sudo apt install -y git make curl tar gzip maven dos2unix
+```
+
+### 2）处理脚本换行 + 权限（从 Windows 拷过来很常见）
+
+在项目根目录执行：
+
+```bash
+dos2unix project5_testcases/*.sh 2>/dev/null || true
+chmod +x project5_testcases/*.sh
+```
+
+### 3）生成 ANTLR（用你项目自带 Makefile）
+
+```bash
+make
+```
+
+### 4）编译 Java（两种方式选一种）
+
+**A. 用 Maven（如果你项目有 pom.xml）：**
+
+```bash
+mvn -q -DskipTests package
+```
+
+**B. 用 javac 手动编译（通用）：**
+
+```bash
+mkdir -p build/classes
+javac -encoding UTF-8 \
+  -cp "libs/antlr-4.13.2-complete.jar" \
+  -d build/classes \
+  $(find src/main/java -name "*.java")
+```
+
+### 5）跑测试检查
+
+进入测试目录：
+
+```bash
+cd project5_testcases
+```
+
+先确认 clang（很重要）：
+
+```bash
+clang --version
+```
+
+> 你的脚本/文档里写的是用 `clang-19`。如果你的 Debian 上没有 `clang-19` 这个包名，但 `clang` 版本足够新（例如 18/19/20），通常也能跑；如果脚本强制写死 `clang-19`，那就需要我帮你改成兼容方案（比如装 llvm 官方源或做一个 `clang-19` 的软链接）。
+
+然后按流程跑：
+
+```bash
+make refs
+./check_testcases.sh
+```
+
+再测你的编译器输出 IR：
+
+* 如果你用 Maven：`IDEA_TARGET=../target/classes`
+* 如果你用 javac：`IDEA_TARGET=../build/classes`
+
+```bash
+make genir IDEA_TARGET=../build/classes
+make compileir
+./testir.sh
+```
+
+---
+
+## 你现在先做哪一步？
+
+你先把这条命令的输出贴我（只要一行即可）：
+
+```bash
+apt-cache search '^openjdk-[0-9]+-jdk$'
+```
+
+以及：
+
+```bash
+clang --version
+```
+
+我就能立刻告诉你：你该装哪个 JDK、以及 clang 这边是否需要额外处理（尤其是脚本是否硬要求 `clang-19`）。
+
+
+
