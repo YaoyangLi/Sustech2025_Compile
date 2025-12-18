@@ -202,4 +202,22 @@ make handin
 
 ---
 
+
 如果你在第 4～7 步任何一步报错：把**报错信息原样复制粘贴**给我（尤其是第一行错误 + 最后几行），我会按你报错位置给你“应该改哪条命令/缺哪个包/哪个路径不对”的最短修复方案。
+
+
+# 1) 更新软件源索引
+sudo apt update
+
+# 2) 安装 add-apt-repository（有些系统默认没有）
+sudo apt install -y software-properties-common
+
+# 3) 启用 universe（Ubuntu 常见问题：没开 universe 导致找不到很多包）
+sudo add-apt-repository -y universe
+
+# 4) 再次更新索引
+sudo apt update
+
+# 5) 再安装 OpenJDK 17
+sudo apt install -y openjdk-17-jdk
+
