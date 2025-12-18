@@ -221,3 +221,15 @@ sudo apt update
 # 5) 再安装 OpenJDK 17
 sudo apt install -y openjdk-17-jdk
 
+
+cs323@deb-cs323-compilers:~/Desktop/SUSTech-CS323-Compiler-my-project5$ cat /etc/os-release
+PRETTY_NAME="Debian GNU/Linux 13 (trixie)"
+NAME="Debian GNU/Linux"
+VERSION_ID="13"
+VERSION="13 (trixie)"
+VERSION_CODENAME=trixie
+DEBIAN_VERSION_FULL=13.1
+ID=debian
+HOME_URL="https://www.debian.org/"
+SUPPORT_URL="https://www.debian.org/support"
+BUG_REPORT_URL="https://bugs.debian.org/"
